@@ -1,4 +1,4 @@
-# TaskFlow Android
+﻿# TaskFlow Android
 
 TaskFlow Android is a modern to-do application built with Kotlin, Jetpack Compose, Room, and Clean Architecture principles.
 
@@ -43,10 +43,7 @@ settings.gradle.kts
 3. Select an emulator or physical Android device.
 4. Run the app module.
 
-## Status
-
-Portfolio / university Android project.
-
 ## Notes
 
 This project focuses on local persistence, modern Android UI, and clean project organization.
+
