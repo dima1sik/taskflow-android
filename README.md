@@ -35,6 +35,3 @@ It was developed as a university Android project and later cleaned up for portfo
 3. Select an emulator or physical Android device.
 4. Run the app module.
 
-## Status
-
-Finished university project prepared for GitHub portfolio.
