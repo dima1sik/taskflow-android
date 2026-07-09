@@ -47,3 +47,14 @@ settings.gradle.kts
 
 This project focuses on local persistence, modern Android UI, and clean project organization.
 
+## Screenshots
+
+### Task List
+![Task List](screenshots/task-list.png)
+
+### Add Task
+![Add Task](screenshots/add-task.png)
+
+### Task Details
+![Task Details](screenshots/task-details.png)
+
