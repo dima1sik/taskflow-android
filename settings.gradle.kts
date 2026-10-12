@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CleanTodoApp3"
+rootProject.name = "TaskFlow"
 include(":app")
- 
+

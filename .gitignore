@@ -1,4 +1,4 @@
-﻿# OS / IDE
+# OS / IDE
 .DS_Store
 Thumbs.db
 .idea/
@@ -23,6 +23,8 @@ bin/
 obj/
 target/
 .gradle/
+.kotlin/
+captures/
 
 # Logs
 *.log
@@ -36,3 +38,7 @@ target/
 *.pdb
 *.suo
 *.user
+*.apk
+*.aab
+*.jks
+*.keystore

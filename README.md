@@ -1,60 +1,54 @@
-﻿# TaskFlow Android
+# TaskFlow Android
 
-TaskFlow Android is a modern to-do application built with Kotlin, Jetpack Compose, Room, and Clean Architecture principles.
-
-## Overview
-
-The app allows users to create, edit, complete, and delete tasks. It was developed as a university Android project and later cleaned up for portfolio presentation.
+A local task manager built as a university project with Kotlin, Jetpack Compose, Room, and coroutines.
 
 ## Features
 
-- Add new tasks
-- Mark tasks as completed
-- Edit existing tasks
-- Delete tasks
-- Local data persistence with Room
-- Clean Architecture structure
-- Jetpack Compose UI
+- Create, rename, complete, and delete tasks.
+- Keep tasks locally between app launches; no account or network access is required.
+- Preserve unfinished input across activity recreation.
+- Reject blank titles and report failed writes without discarding the draft.
 
-## Tech Stack
+## Structure
 
-- Kotlin
-- Android SDK
-- Jetpack Compose
-- Material 3
-- Room Database
-- ViewModel
-- Coroutines
-- Gradle Kotlin DSL
+- `ui/`: Compose screen and theme.
+- `presentation/`: ViewModel, observable UI state, and operation events.
+- `domain/`: task model, repository contract, and task creation validation.
+- `data/`: Room entities, DAO, database, and repository implementation.
 
-## Project Structure
+`TodoApplication` owns one database for the app's lifetime. Renaming and changing completion update separate columns so an older screen snapshot cannot overwrite the other field.
 
-`	ext
-app/
-gradle/
-build.gradle.kts
-settings.gradle.kts
-`
+## Build and run
 
-## How to Run
+Install Android Studio, JDK 21, Android SDK Platform 35, and Build Tools 34.0.0. The Gradle wrapper is included; Kotlin/Java compilation targets JVM 17. The app supports Android 7.0 (API 24) and newer.
 
-1. Open the project in Android Studio.
-2. Wait for Gradle Sync to finish.
-3. Select an emulator or physical Android device.
-4. Run the app module.
+Open the project in Android Studio and let it configure the SDK, or set `ANDROID_HOME` to your SDK directory. An alternative is an ignored `local.properties` file containing `sdk.dir=C:/path/to/Android/Sdk`.
 
-## Notes
+From the repository root on Windows:
 
-This project focuses on local persistence, modern Android UI, and clean project organization.
+```powershell
+.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+```
 
-## Screenshots
+On Linux/macOS, use `./gradlew` with the same tasks. The debug APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
 
-### Task List
-![Task List](screenshots/task-list.png)
+Run the `app` configuration in Android Studio on an emulator/device, or install and launch through the CLI:
 
-### Add Task
-![Add Task](screenshots/add-task.png)
+```powershell
+adb install -r app\build\outputs\apk\debug\app-debug.apk
+adb shell am start -n com.example.cleantodoapp3/.MainActivity
+```
 
-### Task Details
-![Task Details](screenshots/task-details.png)
+## Tests
 
+Local JVM tests cover title validation, repository errors, asynchronous ViewModel operations, duplicate submission, retries, and cancellation.
+
+Room and Compose instrumentation tests cover database persistence, independent field updates, retained drafts, and failed-write feedback. They require a connected device or emulator:
+
+```powershell
+.\gradlew.bat :app:connectedDebugAndroidTest
+```
+
+## Screenshot
+
+![Task list](screenshots/task-list.png)
