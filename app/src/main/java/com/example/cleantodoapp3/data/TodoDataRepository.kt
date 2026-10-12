@@ -30,23 +30,17 @@ class TodoDataRepository(
         )
     }
 
-    override suspend fun updateTodo(todo: Todo) {
-        dao.update(
-            TodoEntity(
-                id = todo.id,
-                title = todo.title,
-                isDone = todo.isDone
-            )
-        )
+    override suspend fun setTodoDone(id: Int, isDone: Boolean) {
+        check(dao.setDone(id, isDone) == 1) { "Task no longer exists" }
     }
 
-    override suspend fun deleteTodo(todo: Todo) {
-        dao.delete(
-            TodoEntity(
-                id = todo.id,
-                title = todo.title,
-                isDone = todo.isDone
-            )
-        )
+    override suspend fun renameTodo(id: Int, title: String) {
+        val normalizedTitle = title.trim()
+        require(normalizedTitle.isNotEmpty()) { "Task title cannot be blank" }
+        check(dao.rename(id, normalizedTitle) == 1) { "Task no longer exists" }
+    }
+
+    override suspend fun deleteTodo(id: Int) {
+        check(dao.delete(id) == 1) { "Task no longer exists" }
     }
 }

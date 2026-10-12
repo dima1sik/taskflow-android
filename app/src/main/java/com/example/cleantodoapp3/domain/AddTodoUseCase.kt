@@ -4,9 +4,11 @@ class AddTodoUseCase(
     private val repository: TodoRepository
 ) {
     suspend fun execute(title: String) {
+        val normalizedTitle = title.trim()
+        require(normalizedTitle.isNotEmpty()) { "Task title cannot be blank" }
         repository.addTodo(
             Todo(
-                title = title,
+                title = normalizedTitle,
                 isDone = false
             )
         )
