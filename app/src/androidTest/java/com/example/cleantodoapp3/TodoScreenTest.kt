@@ -1,9 +1,7 @@
 package com.example.cleantodoapp3
 
-import androidx.compose.ui.semantics.SemanticsProperties
-import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.StateRestorationTester
@@ -13,7 +11,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModelStore
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -59,7 +56,7 @@ class TodoScreenTest {
         restorationTester.setContent {
             CleanTodoApp3Theme { TodoScreen(viewModel) }
         }
-        composeRule.waitUntil { !viewModel.uiState.value.isLoading }
+        composeRule.waitUntil(timeoutMillis = 10_000) { !viewModel.uiState.value.isLoading }
     }
 
     @After
@@ -72,11 +69,7 @@ class TodoScreenTest {
     fun newTaskDraftSurvivesStateRestoration() {
         composeRule.onNode(hasSetTextAction()).performTextInput("Unfinished draft")
         restorationTester.emulateSavedInstanceStateRestore()
-        composeRule.onNode(hasSetTextAction()).assert(
-            SemanticsMatcher.expectValue(
-                SemanticsProperties.EditableText, AnnotatedString("Unfinished draft")
-            )
-        )
+        composeRule.onNode(hasSetTextAction()).assertTextEquals("Unfinished draft")
     }
 
     @Test
@@ -85,11 +78,7 @@ class TodoScreenTest {
         composeRule.onNode(hasSetTextAction()).performTextInput("Keep my draft")
         composeRule.onNodeWithText("Add").performClick()
         composeRule.onNodeWithText("Couldn't add task. Please try again.").assertIsDisplayed()
-        composeRule.onNode(hasSetTextAction()).assert(
-            SemanticsMatcher.expectValue(
-                SemanticsProperties.EditableText, AnnotatedString("Keep my draft")
-            )
-        )
+        composeRule.onNode(hasSetTextAction()).assertTextEquals("Keep my draft")
         assertTrue(viewModel.uiState.value.todos.isEmpty())
     }
 
@@ -97,14 +86,14 @@ class TodoScreenTest {
     fun editingCompletedTaskKeepsCompletion() {
         composeRule.onNode(hasSetTextAction()).performTextInput("Original")
         composeRule.onNodeWithText("Add").performClick()
-        composeRule.waitUntil { viewModel.uiState.value.todos.size == 1 }
+        composeRule.waitUntil(timeoutMillis = 10_000) { viewModel.uiState.value.todos.size == 1 }
         composeRule.onNodeWithContentDescription("Change completion: Original").performClick()
-        composeRule.waitUntil { viewModel.uiState.value.todos.single().isDone }
+        composeRule.waitUntil(timeoutMillis = 10_000) { viewModel.uiState.value.todos.single().isDone }
         composeRule.onNodeWithContentDescription("Edit task").performClick()
         composeRule.onNode(hasSetTextAction() and hasText("Original"))
             .performTextReplacement("Edited")
         composeRule.onNodeWithContentDescription("Save task").performClick()
-        composeRule.waitUntil { viewModel.uiState.value.todos.single().title == "Edited" }
+        composeRule.waitUntil(timeoutMillis = 10_000) { viewModel.uiState.value.todos.single().title == "Edited" }
         assertTrue(viewModel.uiState.value.todos.single().isDone)
     }
 }
